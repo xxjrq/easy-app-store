@@ -1,0 +1,26 @@
+{
+  "name": "easy-app-store",
+  "version": "0.2.0",
+  "description": "Cross-agent App Store Connect release skill powered by Easy WebBridge",
+  "type": "module",
+  "private": false,
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "preflight": "node scripts/easy-webbridge-client.mjs preflight",
+    "check": "node --check scripts/easy-webbridge-client.mjs"
+  },
+  "keywords": [
+    "agent-skill",
+    "app-store-connect",
+    "ios-release",
+    "app-store-automation",
+    "easy-webbridge",
+    "claude-code",
+    "codex",
+    "opencode",
+    "workbuddy"
+  ]
+}
