@@ -4,7 +4,7 @@ description: 自动完成 iOS 应用的 App Store 上架工作。Use when an age
 license: MIT
 metadata:
   author: xxjrq
-  version: "0.2.0"
+  version: "0.2.1"
   runtime: "easy-webbridge >=0.3.2"
   runtime-repository: "https://github.com/xxjrq/easy-webbridge"
 ---

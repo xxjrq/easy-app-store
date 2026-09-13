@@ -1,6 +1,6 @@
 {
   "name": "easy-app-store",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Cross-agent App Store Connect release skill powered by Easy WebBridge",
   "type": "module",
   "private": false,
