@@ -2,7 +2,7 @@
 
 import { readFile } from "node:fs/promises";
 import { homedir } from "node:os";
-import { join } from "node:path";
+import { isAbsolute, join } from "node:path";
 
 const baseUrl = process.env.EASY_WEBBRIDGE_URL || "http://127.0.0.1:17777";
 const runtimeRepository = "https://github.com/xxjrq/easy-webbridge";
@@ -71,6 +71,27 @@ function valueAfter(flags, name) {
   return value;
 }
 
+function parseTabId(value) {
+  if (value == null) return undefined;
+  if (!/^\d+$/.test(value) || Number(value) <= 0 || !Number.isSafeInteger(Number(value))) {
+    fail("invalid-arguments", `tabId must be a positive safe integer; received ${value}.`);
+  }
+  return Number(value);
+}
+
+function parseCommandArgs(value) {
+  let parsed;
+  try {
+    parsed = JSON.parse(value);
+  } catch {
+    fail("invalid-arguments", "args-json must contain valid JSON.");
+  }
+  if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+    fail("invalid-arguments", "args-json must be a JSON object.");
+  }
+  return parsed;
+}
+
 function usage() {
   console.error(`Usage:
   node scripts/easy-webbridge-client.mjs preflight
@@ -126,18 +147,23 @@ async function main() {
   } else if (["snapshot", "screenshot"].includes(verb)) {
     const [browserId, tabId] = args;
     if (!browserId) fail("invalid-arguments", "browserId is required.");
-    result = await command(browserId, verb, tabId ? { tabId: Number(tabId) } : {});
+    const parsedTabId = parseTabId(tabId);
+    result = await command(browserId, verb, parsedTabId ? { tabId: parsedTabId } : {});
   } else if (verb === "click") {
     const [browserId, selector, tabId] = args;
     if (!browserId || !selector) fail("invalid-arguments", "browserId and selector are required.");
-    result = await command(browserId, "click", { selector, ...(tabId ? { tabId: Number(tabId) } : {}) });
+    const parsedTabId = parseTabId(tabId);
+    result = await command(browserId, "click", { selector, ...(parsedTabId ? { tabId: parsedTabId } : {}) });
   } else if (verb === "fill") {
     const [browserId, selector, value, tabId] = args;
     if (!browserId || !selector || value == null) fail("invalid-arguments", "browserId, selector and value are required.");
-    result = await command(browserId, "fill", { selector, value, ...(tabId ? { tabId: Number(tabId) } : {}) });
+    const parsedTabId = parseTabId(tabId);
+    result = await command(browserId, "fill", { selector, value, ...(parsedTabId ? { tabId: parsedTabId } : {}) });
   } else if (verb === "upload") {
     const [browserId, selector, ...files] = args;
     if (!browserId || !selector || files.length === 0) fail("invalid-arguments", "browserId, selector and at least one file are required.");
+    const relativeFiles = files.filter((file) => !isAbsolute(file));
+    if (relativeFiles.length > 0) fail("invalid-arguments", "upload requires absolute file paths.", { relativeFiles });
     result = await command(browserId, "upload", { selector, files });
   } else if (verb === "close-session") {
     const [browserId, session] = args;
@@ -146,7 +172,7 @@ async function main() {
   } else if (verb === "command") {
     const [browserId, action, argsJson = "{}"] = args;
     if (!browserId || !action) fail("invalid-arguments", "browserId and action are required.");
-    result = await command(browserId, action, JSON.parse(argsJson));
+    result = await command(browserId, action, parseCommandArgs(argsJson));
   } else {
     usage();
     process.exit(2);

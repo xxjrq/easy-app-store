@@ -89,7 +89,7 @@ git clone https://github.com/xxjrq/easy-app-store.git ~/.agents/skills/easy-app-
 node scripts/easy-webbridge-client.mjs preflight
 ```
 
-自检成功会列出在线浏览器的名称和 `browserId`；运行时、Token 或浏览器扩展未就绪时，会返回明确的下一步。
+自检成功会列出在线浏览器的名称和 `browserId`；运行时、Token 或浏览器扩展未就绪时，会返回明确的下一步。自检不验证 App Store Connect 登录状态、团队/App 身份，也不检查 Xcode 签名或构建状态；这些须在实际项目和目标浏览器页面中确认。
 
 ## 直接使用
 

@@ -4,7 +4,7 @@ description: 自动完成 iOS 应用的 App Store 上架工作。Use when an age
 license: MIT
 metadata:
   author: xxjrq
-  version: "0.2.1"
+  version: "0.2.3"
   runtime: "easy-webbridge >=0.3.2"
   runtime-repository: "https://github.com/xxjrq/easy-webbridge"
 ---
@@ -54,9 +54,11 @@ node scripts/easy-webbridge-client.mjs preflight
 4. 为本次上架创建一个 `easy-app-store-<run-id>` 标签组；后续操作复用组内当前页面。
 5. 汇总本次需要的文字、图片、视频、账号和审核附件；能从项目可靠读取的内容直接读取。
 
+`preflight` 只验证 Node.js 版本、Bridge 健康状态、Token 可用性和扩展在线状态。它不检查 App Store Connect 登录会话、团队、应用身份、签名配置、构建是否上传完成或审核状态。选定 browserId 后，先在页面确认登录账号/团队和目标 App，再按实际页面回读确认后续结果；页面不可见或状态未知时不得把操作报告为完成。
+
 ## 执行
 
-1. 使用项目已有的 Xcode、构建脚本或 Fastlane 完成 Release 构建和上传。
+1. 检查本地项目和构建工具，用项目已有的 Xcode、构建脚本或 Fastlane 执行 Release 构建；通过 WebBridge 操作 App Store Connect。Skill 不自带 Xcode 构建器或 App Store Connect API 客户端。
 2. 在 App Store Connect 选择正确应用和版本，关联刚上传的构建。
 3. 填完版本页面、商店资料、隐私与合规页面、审核信息。
 4. 上传所需截图和附件，并等待页面显示处理完成。

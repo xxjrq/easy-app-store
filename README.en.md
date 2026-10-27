@@ -79,7 +79,7 @@ The root [`SKILL.md`](SKILL.md) is the cross-agent entry point. [`agents/openai.
 node scripts/easy-webbridge-client.mjs preflight
 ```
 
-The command verifies Node.js, the Easy WebBridge runtime, its local token, and connected browsers without exposing credentials.
+The command verifies Node.js, the Easy WebBridge runtime, its local token, and connected browsers without exposing credentials. It does not verify the App Store Connect login, team/app identity, Xcode signing, or build status; confirm those in the selected project and live browser session.
 
 ## Prompt
 
